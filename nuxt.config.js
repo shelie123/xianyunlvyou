@@ -1,11 +1,11 @@
-import pkg from './package'
+// import pkg from './package'
 export default {
   mode: 'universal',
   /*
    ** Headers of the page
    */
   head: {
-    title: '闲云旅游网', //修改title
+    title: '闲云大型旅游网', //修改title
     meta: [{
         charset: 'utf-8'
       },
@@ -16,7 +16,7 @@ export default {
       {
         hid: 'description',
         name: 'description',
-        content: pkg.description
+        content: process.env.npm_package_description || ''
       }
     ],
     link: [{
