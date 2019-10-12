@@ -163,6 +163,7 @@ export default {
           line-height: 30px;
           text-align: center;
           color: #fff;
+          font-style: normal;
         }
 
         &:after {

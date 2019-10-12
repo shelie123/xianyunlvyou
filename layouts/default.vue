@@ -46,7 +46,7 @@ ol {
   list-style: none;
 }
 a {
-  text-decoration: none !important;
+  text-decoration: none;
   color: inherit;
 }
 // a:hover {
