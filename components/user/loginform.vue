@@ -66,19 +66,19 @@ export default {
             // 通过调用mutations下的方法来修改state的值，commit方法调用mutations的方法
             // 非常类似于$$emit
             this.$store.commit("user/setUserInfo", data);
+            // 跳转到首页
+            setTimeout(() => {
+              this.$router.push("/");
+            }, 1000);
           }
 
-          //   this.$store.dispatch("user/login", this.form).then(res => {
-          //     // 成功提示
-          //     this.$message({
-          //       message: "登录成功，正在跳转",
-          //       type: "success"
-          //     });
-          //     // 跳转到首页
-          //     setTimeout(() => {
-          //       this.$router.push("/");
-          //     }, 1000);
+          // this.$store.dispatch("user/login", this.form).then(res => {
+          //   // 成功提示
+          //   this.$message({
+          //     message: "登录成功，正在跳转",
+          //     type: "success"
           //   });
+          // });
         }
       });
     }
