@@ -46,40 +46,47 @@ export default {
       this.$refs.form.validate(async valid => {
         //   为true表示没有错误
         if (valid) {
-          var res = await this.$axios({
-            url: "/accounts/login",
-            method: "POST",
-            data: this.form
-          });
-          console.log(res.data);
+          // // 提交登录接口
+          // var res = await this.$axios({
+          //   url: "/accounts/login",
+          //   method: "POST",
+          //   data: this.form
+          // });
+          // console.log(res.data);
 
+          // if (res.status === 200) {
+          //   this.$message.success("登录成功");
+          //   // this.$router.push("/");
+
+          //   const data = res.data;
+          // 把用户信息的token保存到本地，在头部组件中显示用户的数据
+
+          // vuex不能通过直接赋值方式来修改state的值
+          // this.$store.state.username = data.user.nickname;
+
+          // this.$store.dispatch用于调用actions的方法
+          const res = await this.$store.dispatch("user/login", this.form);
+
+          // 通过调用mutations下的方法来修改state的值，commit方法调用mutations的方法
+          // 非常类似于$$emit
+          // this.$store.commit("user/setUserInfo", data);
+          // 跳转到首页
           if (res.status === 200) {
             this.$message.success("登录成功");
-            // this.$router.push("/");
-
-            const data = res.data;
-            // 把用户信息的token保存到本地，在头部组件中显示用户的数据
-
-            // vuex不能通过直接赋值方式来修改state的值
-            // this.$store.state.username = data.user.nickname;
-
-            // 通过调用mutations下的方法来修改state的值，commit方法调用mutations的方法
-            // 非常类似于$$emit
-            this.$store.commit("user/setUserInfo", data);
-            // 跳转到首页
             setTimeout(() => {
               this.$router.push("/");
             }, 1000);
           }
-
-          // this.$store.dispatch("user/login", this.form).then(res => {
-          //   // 成功提示
-          //   this.$message({
-          //     message: "登录成功，正在跳转",
-          //     type: "success"
-          //   });
-          // });
         }
+
+        // this.$store.dispatch("user/login", this.form).then(res => {
+        //   // 成功提示
+        //   this.$message({
+        //     message: "登录成功，正在跳转",
+        //     type: "success"
+        //   });
+        // });
+        // }
       });
     }
   }

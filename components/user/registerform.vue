@@ -84,23 +84,34 @@ export default {
   },
   methods: {
     // 发送验证码
-    handleSendCaptcha() {
+    async handleSendCaptcha() {
       if (!this.form.username) {
         this.$message.error("手机号码不能为空");
         return;
       }
 
-      this.$axios({
-        url: "/captchas",
-        method: "POST",
-        data: {
-          tel: this.form.username
-        }
-      }).then(res => {
-        console.log(res.data);
-        const { code } = res.data;
-        this.$message.success(`当前手机验证码是：${code}`);
-      });
+      // 调用actions的方法
+      const res = await this.$store.dispatch(
+        "user/sendCaptcha",
+        this.form.username
+      );
+
+      const { code } = res.data;
+
+      // 打印出手机的验证码
+      this.$message.success(`验证码是：${code}`);
+
+      // this.$axios({
+      //   url: "/captchas",
+      //   method: "POST",
+      //   data: {
+      //     tel: this.form.username
+      //   }
+      // }).then(res => {
+      //   console.log(res.data);
+      //   const { code } = res.data;
+      //   this.$message.success(`当前手机验证码是：${code}`);
+      // });
     },
 
     // 注册
@@ -117,14 +128,15 @@ export default {
             method: "POST",
             data: props
           });
-          // console.log(res.data);
+          console.log(res.data);
 
           if (res.status === 200) {
             this.$message.success("注册成功");
 
             // 跳转到登录页
-            this.$router.push("/user/login");
-          } 
+            // this.$router.replace("/user/login");
+            this.$router.go(0);
+          }
         }
       });
     }
