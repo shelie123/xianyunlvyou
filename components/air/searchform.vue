@@ -82,17 +82,23 @@ export default {
   methods: {
     // tab切换时触发
     handleSearchTab(item, index) {
-      console.log(123);
+      // console.log(123);
+      if (index === 1) {
+        this.$alert("目前不支持往返", "提示", {
+          confirmButtonText: "确定",
+          type: "info"
+        });
+      }
     },
     // 出发城市输入框获得焦点是出发
     // cb:毁掉杉树，不惜要调用，调用时候必须要传递一个数组的参数
     // 数组中的元素必须是一个对象，对象中必须要有value属性
     queryDepartSearch(value, cb) {
-      // 输入框为空时时候不请求
+      // 输入框为空时候不请求
       if (!value) {
         //   不显示下拉框
         cb([]);
-        reutn;
+        return;
       }
 
       // 请求搜索建议城市
@@ -151,7 +157,14 @@ export default {
 
     // 触发和目标城市切换时触发
     handleReverse() {
-      console.log(123);
+      // console.log(123);
+      const { departCity, departCode, destCity, destCode } = this.form;
+
+      this.form.departCity = destCity;
+      this.form.departCode = destCode;
+
+      this.form.destCity = departCity;
+      this.form.destCode = departCode;
     },
 
     // 提交表单是触发
