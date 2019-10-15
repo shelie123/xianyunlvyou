@@ -34,7 +34,7 @@
           placeholder="请搜索到达城市"
           @select="handleDestSelect"
           v-model="form.destCity"
-          @blur="handleBlur(`dest`)"
+          @blur="handleBlur1(`dest`)"
         ></el-autocomplete>
       </el-form-item>
       <el-form-item label="出发时间">
@@ -76,7 +76,8 @@ export default {
       },
 
       //   存放newData的城市的数据
-      cities: []
+      cities: [],
+      sales: [] //去除模拟数据
     };
   },
   methods: {
@@ -91,7 +92,7 @@ export default {
       }
     },
     // 出发城市输入框获得焦点是出发
-    // cb:毁掉杉树，不惜要调用，调用时候必须要传递一个数组的参数
+    // cb：回调函数，不需要调用，调用时候必须要传递一个数组的参数
     // 数组中的元素必须是一个对象，对象中必须要有value属性
     queryDepartSearch(value, cb) {
       // 输入框为空时候不请求
@@ -130,11 +131,23 @@ export default {
 
     // 出发城市失去焦点时候默认选中第一个
     // type可能等于depart或者dest
+    // handleBlur(type, value) {
+    //   // 默认选中城市列表的第一个
+    //   if (this.cities.length === 0 || !value) return;
+    //   this.form[type + "City"] = this.cities[0].value;
+    //   this.form[type + "Code"] = this.cities[0].sort;
+    // },
     handleBlur(type) {
       // 默认选中城市列表的第一个
       if (this.cities.length === 0) return;
-      this.form[type + "City"] = this.cities[0].value;
-      this.form[type + "Code"] = this.cities[0].sort;
+      this.form.departCity = this.cities[0].value;
+      this.form.departCode = this.cities[0].sort;
+    },
+    handleBlur1(type) {
+      // 默认选中城市列表的第一个
+      if (this.cities.length === 0) return;
+      this.form.destCity = this.cities[0].value;
+      this.form.destCode = this.cities[0].sort;
     },
 
     // 目标城市输入框获得焦点时触发
@@ -190,6 +203,7 @@ export default {
       // 循环rules这个对象，判断对象属性的value如果是空的，打印出message错误信息
       let valid = true;
 
+      console.log(Object.keys(rules));
       Object.keys(rules).forEach(v => {
         // 只要有一次验证不通过，后台验证不再执行
         if (!valid) return;
