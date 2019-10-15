@@ -10,7 +10,22 @@
         <FlightsListHead />
 
         <!-- 航班信息 -->
-        <FlightsItem v-for="(item,index) in flightsData.flights" :key="index" :item="item" />
+        <FlightsItem v-for="(item,index) in dataList" :key="index" :item="item" />
+        <el-pagination
+          v-if="flightsData.flights.length"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageIndex"
+          :page-sizes="[5,10, 15, 20]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="flightsData.total"
+        ></el-pagination>
+
+        <div
+          v-if="flightsData.flights.lenght===0 && !loading"
+          style="padding:50px;text-align:center;"
+        >该航班暂无数据</div>
       </div>
 
       <!-- 侧边栏 -->
@@ -26,16 +41,66 @@ import FlightsListHead from "@/components/air/flightsListHead";
 import FlightsItem from "@/components/air/flightsItem";
 
 export default {
+  // 计算页面
+  computed: {
+    // 从flights总列表数据中切割出来数组列表
+    dataList() {
+      const arr = this.flightsData.flights.slice(
+        (this.pageIndex - 1) * this.pageSize,
+        this.pageIndex * this.pageSize
+      );
+      return arr;
+    }
+  },
+
   data() {
     return {
       // 请求机票列表返回的总数据，包含flights，info，options，total
-      flightsData: {}
+      flightsData: {
+        // 初始值
+        flights: []
+      },
+
+      // 从flights总列表数据中切割出来的数组列表
+      // dataList: [],
+
+      // 当前的页数
+      pageIndex: 1,
+      // 当前的条数
+      pageSize: 5,
+
+      // 判断是否正在加载
+      loading: true
     };
   },
   components: {
     FlightsListHead,
     FlightsItem
   },
+  // 事件函数
+  methods: {
+    // 分页条数切换时候触发，val是当前的条数
+    handleSizeChange(val) {
+      // console.log(`每页 ${val} 条`);
+      // 切换条数
+      this.pageSize = val;
+
+      // 重新回到第一页
+      // this.dataList = this.flightsData.flights.slice(0, this.pageSize);
+    },
+
+    // 页数切换时候触发，val是当前的页数
+    handleCurrentChange(val) {
+      // console.log(`当前页: ${val}`);
+      this.pageIndex = val;
+      // 修改机票列表
+      // this.dataList = this.flightsData.flights.slice(
+      //   (this.pageIndex - 1) * this.pageSize,
+      //   this.pageIndex * this.pageSize
+      // );
+    }
+  },
+
   mounted() {
     //   请求机票列表数据
     this.$axios({
@@ -44,7 +109,14 @@ export default {
       params: this.$route.query
     }).then(res => {
       console.log(res.data);
+      // 保存到机票的总数据
       this.flightsData = res.data;
+
+      // 第一页的数据
+      // this.dataList = this.flightsData.flights.slice(0, this.pageSize);
+
+      // 请求完毕
+      this.loading = false;
     });
   }
 };
