@@ -17,6 +17,7 @@
         <!-- fetch-suggestions返回输入建议的方法
         -->
         <el-autocomplete
+          ref="depCity"
           class="el-autocomplete"
           :fetch-suggestions="queryDepartSearch"
           placeholder="请搜索出发城市"
@@ -29,12 +30,13 @@
         <!-- fetch-suggestions返回输入建议的方法-->
         <!-- select 点击选中建议项时触发 -->
         <el-autocomplete
+          ref="arrCity"
           class="el-autocomplete"
           :fetch-suggestions="queryDestSearch"
           placeholder="请搜索到达城市"
           @select="handleDestSelect"
           v-model="form.destCity"
-          @blur="handleBlur1(`dest`)"
+          @blur="handleBlur(`dest`)"
         ></el-autocomplete>
       </el-form-item>
       <el-form-item label="出发时间">
@@ -139,9 +141,21 @@ export default {
     // },
     handleBlur(type) {
       // 默认选中城市列表的第一个
-      if (this.cities.length === 0) return;
-      this.form.departCity = this.cities[0].value;
-      this.form.departCode = this.cities[0].sort;
+
+      const deped = this.$refs.depCity.value;
+      const arred = this.$refs.arrCity.value;
+
+      if (type === "depart") {
+        if (this.cities.length === 0 || !deped) return;
+        this.form[type + "City"] = this.cities[0].value;
+        this.form[type + "Code"] = this.cities[0].sort;
+      }
+
+      if (type === "dest") {
+        if (this.cities.length === 0 || !arred) return;
+        this.form[type + "City"] = this.cities[0].value;
+        this.form[type + "Code"] = this.cities[0].sort;
+      }
     },
     handleBlur1(type) {
       // 默认选中城市列表的第一个

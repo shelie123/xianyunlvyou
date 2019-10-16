@@ -4,7 +4,7 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <div></div>
+        <FlightsFilters :data="cacheFlightsData" @setDataList="setDataList" />
 
         <!-- 航班头部布局 -->
         <FlightsListHead />
@@ -19,7 +19,7 @@
           :page-sizes="[5,10, 15, 20]"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="flightsData.total"
+          :total="total"
         ></el-pagination>
 
         <div
@@ -39,6 +39,7 @@
 import moment from "moment";
 import FlightsListHead from "@/components/air/flightsListHead";
 import FlightsItem from "@/components/air/flightsItem";
+import FlightsFilters from "@/components/air/flightsFilters";
 
 export default {
   // 计算页面
@@ -58,11 +59,21 @@ export default {
       // 请求机票列表返回的总数据，包含flights，info，options，total
       flightsData: {
         // 初始值
-        flights: []
+        flights: [],
+        info: {},
+        options: {}
       },
 
       // 从flights总列表数据中切割出来的数组列表
       // dataList: [],
+
+      // 声明多一分总数据，该总数据一旦赋值之后不会再被修改，也就是第一次赋值完后的值等于flightsData
+      cacheFlightsData: {
+        // 初始值
+        flights: [],
+        info: {},
+        options: {}
+      },
 
       // 当前的页数
       pageIndex: 1,
@@ -70,15 +81,27 @@ export default {
       pageSize: 5,
 
       // 判断是否正在加载
-      loading: true
+      loading: true,
+
+      // 分页条数
+      total: 0
     };
   },
   components: {
     FlightsListHead,
-    FlightsItem
+    FlightsItem,
+    FlightsFilters
   },
   // 事件函数
   methods: {
+    // 给过滤组件修改flightsData的flights
+    setDataList(arr) {
+      this.flightsData.flights = arr;
+      // 修改分页的初始值
+      this.total = arr.length;
+      this.pageIndex = 1;
+    },
+
     // 分页条数切换时候触发，val是当前的条数
     handleSizeChange(val) {
       // console.log(`每页 ${val} 条`);
@@ -112,11 +135,17 @@ export default {
       // 保存到机票的总数据
       this.flightsData = res.data;
 
+      // 赋值多一分给缓存的对象，一旦赋值之后不能再被修改
+      this.cacheFlightsData = { ...res.data };
+
       // 第一页的数据
       // this.dataList = this.flightsData.flights.slice(0, this.pageSize);
 
       // 请求完毕
       this.loading = false;
+
+      // 分页总数
+      this.total = this.flightsData.total;
     });
   }
 };
