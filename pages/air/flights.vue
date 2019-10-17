@@ -30,6 +30,7 @@
 
       <!-- 侧边栏 -->
       <div class="aside">
+        <FlightsAside />
         <!-- 侧边栏组件 -->
       </div>
     </el-row>
@@ -40,6 +41,7 @@ import moment from "moment";
 import FlightsListHead from "@/components/air/flightsListHead";
 import FlightsItem from "@/components/air/flightsItem";
 import FlightsFilters from "@/components/air/flightsFilters";
+import FlightsAside from "@/components/air/flightsAside";
 
 export default {
   // 计算页面
@@ -90,7 +92,8 @@ export default {
   components: {
     FlightsListHead,
     FlightsItem,
-    FlightsFilters
+    FlightsFilters,
+    FlightsAside
   },
   // 事件函数
   methods: {
@@ -121,32 +124,56 @@ export default {
       //   (this.pageIndex - 1) * this.pageSize,
       //   this.pageIndex * this.pageSize
       // );
+    },
+    // 获取机票的列表
+    getList() {
+      // 请求机票的列表数据
+      this.$axios({
+        url: "/airs",
+        // params是axios的get的参数
+        params: this.$route.query
+      }).then(res => {
+        // 保存机票的总数据
+        this.flightsData = res.data;
+
+        // 赋值多一分给缓存的对象，一旦赋值之后不能再被修改
+        this.cacheFlightsData = { ...res.data };
+
+        // 请求完毕
+        this.loading = false;
+
+        // 分页总数
+        this.total = this.flightsData.total;
+      });
     }
   },
-
+  watch: {
+    // 监听路由
+    $route() {
+      // 请求机票列表数据
+      this.getList();
+    }
+  },
   mounted() {
     //   请求机票列表数据
-    this.$axios({
-      url: "/airs",
-      // params是axios的get参数
-      params: this.$route.query
-    }).then(res => {
-      console.log(res.data);
-      // 保存到机票的总数据
-      this.flightsData = res.data;
-
-      // 赋值多一分给缓存的对象，一旦赋值之后不能再被修改
-      this.cacheFlightsData = { ...res.data };
-
-      // 第一页的数据
-      // this.dataList = this.flightsData.flights.slice(0, this.pageSize);
-
-      // 请求完毕
-      this.loading = false;
-
-      // 分页总数
-      this.total = this.flightsData.total;
-    });
+    // this.$axios({
+    //   url: "/airs",
+    //   // params是axios的get参数
+    //   params: this.$route.query
+    // }).then(res => {
+    //   console.log(res.data);
+    //   // 保存到机票的总数据
+    //   this.flightsData = res.data;
+    //   // 赋值多一分给缓存的对象，一旦赋值之后不能再被修改
+    //   this.cacheFlightsData = { ...res.data };
+    //   // 第一页的数据
+    //   // this.dataList = this.flightsData.flights.slice(0, this.pageSize);
+    //   // 请求完毕
+    //   this.loading = false;
+    //   // 分页总数
+    //   this.total = this.flightsData.total;
+    // });
+    this.getList();
   }
 };
 </script>

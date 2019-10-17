@@ -48,7 +48,9 @@
             </el-col>
             <el-col :span="5" class="price">￥{{seat.org_settle_price}}</el-col>
             <el-col :span="3" class="choose-button">
-              <el-button type="warning" size="mini">选定</el-button>
+              <nuxt-link :to="`/air/order?id=${item.id}&$seat_xid=${seat.seat_xid}`">
+                <el-button type="warning" size="mini">选定</el-button>
+              </nuxt-link>
               <p>剩余：{{seat.discount}}</p>
             </el-col>
           </el-row>
@@ -71,7 +73,7 @@ export default {
       // 获取时间，将时间跟分钟切割 得出，小时和分钟 如 14:00 切割之后 ["14":"00"]
       const arrTime = this.item.arr_time.split(":"); // 到达时间
       const depTime = this.item.dep_time.split(":"); // 起飞时间
-    //   console.log(arrTime);
+      //   console.log(arrTime);
 
       //   如果是第二天到达，到达时间要加上24小时
       if (arrTime < depTime) {
@@ -82,11 +84,11 @@ export default {
       const arr = arrTime[0] * 60 + +arrTime[1];
       //   起飞时间的分钟
       const dep = depTime[0] * 60 + +depTime[1];
-    //   console.log(arr);
+      //   console.log(arr);
 
       // 飞行时间的分钟
       const dis = arr - dep;
-    //   console.log(dis);
+      //   console.log(dis);
 
       // 将飞行时间的分钟转成时间的小时与分钟
       //   飞行用了多少小时
