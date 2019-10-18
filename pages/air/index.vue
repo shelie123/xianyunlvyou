@@ -63,7 +63,7 @@ import SearchForm from "@/components/air/searchform";
 export default {
   data() {
     return {
-      sales: [{}]
+      sales: []
     };
   },
   components: {

@@ -64,6 +64,8 @@
         <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
       </div>
     </div>
+    <!-- 调用总价格，让computed会执行 -->
+    <span v-show="false">{{allPrice}}</span>
   </div>
 </template>
 
@@ -72,7 +74,9 @@ export default {
   data() {
     return {
       // 机票的详情
-      detail: {},
+      detail: {
+        seat_infos: {}
+      },
 
       //   用户列表
       users: [
@@ -90,6 +94,33 @@ export default {
       captcha: "", //验证码
       invoice: false //发票，写死
     };
+  },
+  computed: {
+    // 计算总价格
+    allPrice() {
+      // 如果接口还没有请求回来，直接返回
+      if (!this.detail.seat_infos) return;
+
+      // 总价格初始值
+      let price = 0;
+
+      // 加上单价
+      price += this.detail.seat_infos.org_settle_price;
+
+      //  燃油费
+      price += this.detail.airport_tax_audlet;
+
+      // 保险
+      price += this.insurances.length * 30;
+
+      // 人数
+      price *= this.users.length;
+
+      // 触发设置总金额事件，把总价格传递给父组件
+      this.$emit("getAllPrice", price);
+
+      return price;
+    }
   },
   methods: {
     // 添加乘机人
@@ -160,12 +191,24 @@ export default {
           Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
         }
       }).then(res => {
-        console.log(res.data);
+        // console.log(res.data);
+        const { data, message } = res.data;
+
+        this.$message.success(message);
+
+        // 跳转到付款页 /air/pay?id=505
+        this.$router.push({
+          path: "/air/pay",
+          query: {
+            id: data.id
+          }
+        });
       });
     }
   },
   mounted() {
     const { id, seat_xid } = this.$route.query;
+    console.log(seat_xid);
 
     // 请求机票详情
     this.$axios({
@@ -177,7 +220,10 @@ export default {
       console.log(res);
       // 保存详情到data
       this.detail = res.data;
-      console.log(this.detail);
+      // console.log(this.detail);
+
+      // 把detail返回给父组件
+      this.$emit("getDetail", this.detail);
     });
   }
 };

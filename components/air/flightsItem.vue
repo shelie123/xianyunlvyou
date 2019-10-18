@@ -48,7 +48,7 @@
             </el-col>
             <el-col :span="5" class="price">￥{{seat.org_settle_price}}</el-col>
             <el-col :span="3" class="choose-button">
-              <nuxt-link :to="`/air/order?id=${item.id}&$seat_xid=${seat.seat_xid}`">
+              <nuxt-link :to="`/air/order?id=${item.id}&seat_xid=${seat.seat_xid}`">
                 <el-button type="warning" size="mini">选定</el-button>
               </nuxt-link>
               <p>剩余：{{seat.discount}}</p>
@@ -60,6 +60,8 @@
   </div>
 </template>
 <script>
+// 导入计算的方法
+import { computeTime } from "@/utils/utils";
 export default {
   data() {
     return {
@@ -70,33 +72,7 @@ export default {
   // 计算属性，监听组件内容引用的实例的属性的变化
   computed: {
     rankTime() {
-      // 获取时间，将时间跟分钟切割 得出，小时和分钟 如 14:00 切割之后 ["14":"00"]
-      const arrTime = this.item.arr_time.split(":"); // 到达时间
-      const depTime = this.item.dep_time.split(":"); // 起飞时间
-      //   console.log(arrTime);
-
-      //   如果是第二天到达，到达时间要加上24小时
-      if (arrTime < depTime) {
-        arrTime[0] += 24;
-      }
-
-      // 到达时间的分钟
-      const arr = arrTime[0] * 60 + +arrTime[1];
-      //   起飞时间的分钟
-      const dep = depTime[0] * 60 + +depTime[1];
-      //   console.log(arr);
-
-      // 飞行时间的分钟
-      const dis = arr - dep;
-      //   console.log(dis);
-
-      // 将飞行时间的分钟转成时间的小时与分钟
-      //   飞行用了多少小时
-      const hours = Math.floor(dis / 60);
-      //   飞行用了多少分钟
-      const min = dis % 60;
-
-      return `${hours}小时${min}分钟`;
+      return computeTime(this.item.arr_time, this.item.dep_time);
     }
   },
 
