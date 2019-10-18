@@ -4,7 +4,6 @@ export default ({
   store
 }) => {
   window.onNuxtReady(() => {
-    createPersistedState({
-    })(store)
+    createPersistedState({})(store)
   })
 }

@@ -74,9 +74,7 @@ export default {
   data() {
     return {
       // 机票的详情
-      detail: {
-        seat_infos: {}
-      },
+      detail: {},
 
       //   用户列表
       users: [
@@ -191,7 +189,7 @@ export default {
           Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
         }
       }).then(res => {
-        // console.log(res.data);
+        console.log(res.data);
         const { data, message } = res.data;
 
         this.$message.success(message);
