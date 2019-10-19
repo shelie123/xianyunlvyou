@@ -190,10 +190,10 @@ export default {
     handleFiltersCancel() {
       // console.log(123);
 
-      this.airport = "";
-      this.flightTime = "";
-      this.company = "";
-      this.airSize = "";
+      this.flites.airport = "";
+      this.flites.flightTimes = "";
+      this.flites.company = "";
+      this.flites.airSize = "";
 
       // 传递没有修改的列表数据
       this.$emit("setDataList", this.data.flights);
