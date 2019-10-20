@@ -2,7 +2,7 @@
   <div>
     <div class="digui">
       <div v-for="(item,index) in data" :key="index">
-        {{item.name}}
+        <p>{{item.name}}</p>
         <!-- 自己调用自己 -->
         <menuItem :data="item.children" v-if="item.children" />
       </div>
