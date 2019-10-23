@@ -1,10 +1,18 @@
 <template>
   <div>
-    <div class="digui">
-      <div v-for="(item,index) in data" :key="index">
-        <p>{{item.name}}</p>
-        <!-- 自己调用自己 -->
-        <menuItem :data="item.children" v-if="item.children" />
+    <div class="container">
+      <div class="top clearfix">
+        <div class="cityList clearfix" v-for="(item,index) in list" :key="index">
+          <span class="fl">{{item.type}}</span>
+          <i class="el-icon-arrow-right fr"></i>
+          <div class="cityright">
+            <div class="citychild" v-for="(v,index) in item.children" :key="index">
+              <em>{{index+1}}</em>
+              <i>{{v.city}}</i>
+              <span>{{v.desc}}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -12,13 +20,79 @@
 
 <script>
 export default {
-  name: "menuItem",
-  props: ["data"]
+  props: ["list"]
 };
 </script>
 
 <style scoped lang="less">
-.digui {
-  padding-left: 50px;
+.container {
+  box-sizing: border-box;
+  .top {
+    width: 260px;
+    position: relative;
+    .cityList {
+      padding: 0 20px;
+      line-height: 41px;
+      border: 1px #ddd solid;
+
+      i {
+        line-height: 41px;
+        font-size: 18px;
+      }
+      .cityright {
+        width: 400px;
+        position: absolute;
+        left: 260px;
+        top: 0;
+        display: none;
+        background: #fff;
+        z-index: 999;
+        .citychild {
+          height: 42px;
+          line-height: 41px;
+          text-align: left;
+          border-left: 1px #ddd solid;
+          border-right: 1px #ddd solid;
+
+          em {
+            font-style: italic;
+            color: #ffa500;
+            font-size: 24px;
+            font-weight: 400;
+            padding-left: 20px;
+          }
+          i {
+            color: #ffa500;
+            padding-left: 20px;
+            font-size: 16px;
+            cursor: pointer;
+          }
+          span {
+            padding-left: 20px;
+            color: 666;
+            cursor: pointer;
+          }
+        }
+        .citychild:nth-child(1) {
+          border-top: 1px #ddd solid;
+        }
+        .citychild:last-child {
+          border-bottom: 1px #ddd solid;
+        }
+        .citychild:nth-child(-n + 4) {
+          border-left: none;
+        }
+      }
+    }
+    .cityList:not(:first-child) {
+      border-top: none;
+    }
+    .cityList:hover {
+      border-right: none;
+      .cityright {
+        display: block;
+      }
+    }
+  }
 }
 </style>

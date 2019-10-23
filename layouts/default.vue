@@ -49,10 +49,31 @@ a {
   text-decoration: none;
   color: inherit;
 }
-a:hover {
-}
+// a:hover {
+// }
 em,
 i {
   font-style: normal;
+}
+/*清除浮动*/
+
+.clearfix::after {
+  visibility: hidden;
+  clear: both;
+  display: block;
+  content: ".";
+  height: 0;
+}
+
+.clearfix {
+  *zoom: 1;
+}
+
+.fl {
+  float: left;
+}
+
+.fr {
+  float: right;
 }
 </style>
