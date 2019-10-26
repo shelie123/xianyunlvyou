@@ -19,6 +19,12 @@
           </div>
         </div>
       </div>
+      <div class="bottom">
+        <p>推荐城市</p>
+        <div class="images">
+          <img src="../../assets/pic_sea.jpeg" alt />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -102,6 +108,21 @@ export default {
       border-right: none;
       .cityright {
         display: block;
+      }
+    }
+  }
+  .bottom {
+    width: 260px;
+    margin-top: 30px;
+    p {
+      padding-bottom: 5px;
+      border-bottom: 1px #ddd solid;
+    }
+    .images {
+      margin-top: 10px;
+
+      img {
+        width: 100%;
       }
     }
   }
