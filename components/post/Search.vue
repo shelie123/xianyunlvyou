@@ -1,24 +1,25 @@
 <template>
   <div>
     <div class="content-right-top">
-      <input type="text" placeholder="请输入想去的地方，比如：广州" />
-      <i class="el-icon-search" @click="handleSearch"></i>
+      <input
+        type="text"
+        placeholder="请输入想去的地方，比如：广州"
+        v-model="cityInfo"
+        @keyup.enter="handleSearch(cityInfo)"
+      />
+      <i class="el-icon-search" @click="handleSearch(cityInfo)"></i>
     </div>
     <div class="recommend">
-      <span>推荐:</span>
-      <a href="#">
-        <span>广州</span>
-      </a>
-      <a href="#">
-        <span>上海</span>
-      </a>
-      <a href="#">
-        <span>北京</span>
-      </a>
+      <i>推荐:</i>
+      <span
+        v-for="(item,index) in cityList"
+        :key="index"
+        @click="handleSearch(item.name)"
+      >{{item.name}}</span>
     </div>
     <div class="content-head clearfix">
       <div class="content-head-left fl">推荐攻略</div>
-      <div class="content-head-right fr">
+      <div class="content-head-right fr" @click="handleEditor">
         <i class="el-icon-edit"></i>
         <span>写游记</span>
       </div>
@@ -27,33 +28,65 @@
 </template>
 
 <script>
-export default {};
+export default {
+  watch: {
+    city() {
+      this.cityInfo = this.city;
+    }
+  },
+  props: ["city"],
+
+  data() {
+    return {
+      cityInfo: "",
+      cityList: [
+        { name: "北京" },
+        { name: "上海" },
+        { name: "广州" },
+        { name: "深圳" }
+      ]
+    };
+  },
+  methods: {
+    handleSearch(cityInfo) {
+      this.$emit("setCityName", cityInfo);
+    },
+    handleEditor() {
+      this.$router.push("/post/postEditor");
+    }
+  }
+};
 </script>
 
 <style scoped lang="less">
 .content-right-top {
+  box-sizing: border-box;
   position: relative;
   input {
+    box-sizing: border-box;
     width: 100%;
     padding: 10px 0;
     border: 3px #ffa500 solid;
     text-indent: 2em;
+    outline: none;
   }
   .el-icon-search {
     position: absolute;
     font-size: 20px;
     font-weight: 900;
     color: #ffa500;
-    right: 10px;
+    right: 15px;
     top: 10px;
+    cursor: pointer;
   }
 }
 .recommend {
   font-size: 14px;
   margin-top: 10px;
   color: #666;
-  a {
-    padding: 0 10px;
+  span {
+    padding-left: 10px;
+    cursor: pointer;
   }
 }
 .content-head {
@@ -74,6 +107,7 @@ export default {};
     background: #409eff;
     border-radius: 5px;
     color: #fff;
+    cursor: pointer;
     span {
       font-size: 16px;
     }

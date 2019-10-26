@@ -6,7 +6,12 @@
           <span class="fl">{{item.type}}</span>
           <i class="el-icon-arrow-right fr"></i>
           <div class="cityright">
-            <div class="citychild" v-for="(v,index) in item.children" :key="index">
+            <div
+              class="citychild"
+              v-for="(v,index) in item.children"
+              :key="index"
+              @click="handleCity(v.city)"
+            >
               <em>{{index+1}}</em>
               <i>{{v.city}}</i>
               <span>{{v.desc}}</span>
@@ -20,7 +25,13 @@
 
 <script>
 export default {
-  props: ["list"]
+  props: ["list"],
+  methods: {
+    handleCity(city) {
+      console.log(city);
+      this.$emit("getCityName", city);
+    }
+  }
 };
 </script>
 

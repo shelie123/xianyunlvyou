@@ -1,40 +1,84 @@
 <template>
   <div>
     <div class="content clearfix">
-      <div class="content-details">
-        <div class="details-top">
-          <a href="#">塞班贵？一定是你的打开方式不对！6000块玩转塞班</a>
-        </div>
-        <div class="details-center">
-          <a href="#">
-            大家对塞班岛总存在着这样的误解，知道它是美属地盘，就理所当然地觉得这里的花费一定很高，
-            花费高有高的玩法，那如果只有6000块的预算呢？要怎么玩？关于旅行这件事，
-            我们要让钱花得更有道理，收下这份攻略，带你6000块花式玩转塞班。图：塞班岛
-            by第5季旅游一、怎样用6000块玩转塞班？大多数出境游客人不做预算或最
-          </a>
-        </div>
+      <!-- 多图布局 -->
+      <div class="content-details clearfix" v-if="list.images.length>=3">
+        <div class="details-top">{{list.title}}</div>
+        <div class="details-center">{{list.summary}}</div>
         <div class="details-image">
-          <a href="#">
-            <img src="../../assets/pic_sea.jpeg" alt />
-          </a>
-          <a href="#">
-            <img src="../../assets/pic_sea.jpeg" alt />
-          </a>
-          <a href="#">
-            <img src="../../assets/pic_sea.jpeg" alt />
-          </a>
+          <img v-for="(item,index) in list.images" :key="index" :src="item" v-if="index<3" alt />
         </div>
         <div class="details-bottom">
           <span>
-            <i class="el-icon-location-outline"></i> 北京市
+            <i class="el-icon-location-outline"></i>
+            {{list.cityName}}
           </span>
           <span>by</span>
-          <a href="#">
-            <span>地球发动机</span>
-          </a>
+          <em>
+            <span>
+              <img :src="$axios.defaults.baseURL+list.account.defaultAvatar" alt />
+              {{list.account.nickname}}
+            </span>
+          </em>
           <span>
-            <i class="el-icon-view"></i> 8384
+            <i class="el-icon-view"></i>
+            {{list.watch}}
           </span>
+          <i class="fr">{{list.like?list.like:0}}赞</i>
+        </div>
+      </div>
+
+      <!-- 单图布局 -->
+      <div class="content-oneList clearfix" v-if="list.images.length>0 && list.images.length<3">
+        <div class="image fl">
+          <img :src="list.images[0]" alt />
+        </div>
+        <div class="centerList fl">
+          <span>{{list.title}}</span>
+          <p>{{list.summary}}</p>
+          <div class="userInfo">
+            <span class="fl">
+              <i class="el-icon-location-outline"></i>
+              {{list.cityName}}
+            </span>
+            <span class="fl">by</span>
+            <em class="fl">
+              <img :src="$axios.defaults.baseURL+list.account.defaultAvatar" alt />
+              {{list.account.nickname}}
+            </em>
+            <span class="fl">
+              <i class="el-icon-view"></i>
+              {{list.watch}}
+            </span>
+            <i class="fr">{{list.like?list.like:0}}赞</i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 无图布局 -->
+      <div class="content-nullList clearfix" v-if="list.images.length ===0">
+        <div class="image fl">
+          <img src="../../assets/wutu.png" alt />
+        </div>
+        <div class="centerList fl">
+          <span>{{list.title}}</span>
+          <p>{{list.summary}}</p>
+          <div class="userInfo">
+            <span class="fl">
+              <i class="el-icon-location-outline"></i>
+              {{list.cityName}}
+            </span>
+            <span class="fl">by</span>
+            <em class="fl">
+              <img :src="$axios.defaults.baseURL+list.account.defaultAvatar" alt />
+              {{list.account.nickname}}
+            </em>
+            <span class="fl">
+              <i class="el-icon-view"></i>
+              {{list.watch}}
+            </span>
+            <i class="fr">{{list.like?list.like:0}}赞</i>
+          </div>
         </div>
       </div>
     </div>
@@ -42,13 +86,18 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props: ["list"]
+};
 </script>
 
 <style scoped lang="less">
 .content {
   width: 700px;
+
   .content-details {
+    padding-bottom: 10px;
+    border-bottom: 1px #ddd solid;
     margin: 20px 0;
     .details-top {
       margin: 20px 0;
@@ -63,21 +112,139 @@ export default {};
       -webkit-line-clamp: 3;
     }
     .details-image {
-      margin: 20px 0;
       width: 100%;
-      a {
-        img {
-          width: 32.5%;
-        }
+      img {
+        width: 32.5%;
+        height: 150px;
+        padding: 15px 0;
+        object-fit: cover;
       }
     }
     .details-bottom {
       color: #b0a6b0;
+      font-size: 12px;
       span {
-        padding-right: 5px;
+        padding-right: 10px;
       }
-      a {
+      em {
+        font-size: 12px;
+        padding-right: 10px;
         color: #ffa500;
+        img {
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+        }
+      }
+      i {
+        font-size: 16px;
+        color: #ffa500;
+      }
+    }
+  }
+  .content-oneList {
+    margin-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px #ddd solid;
+    .image {
+      width: 220px;
+      img {
+        width: 100%;
+      }
+    }
+    .centerList {
+      width: 460px;
+      margin-left: 20px;
+      span {
+        display: block;
+        margin-bottom: 15px;
+        font-size: 18px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
+      }
+      p {
+        width: 100%;
+        color: #666666;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+      }
+      .userInfo {
+        margin-top: 20px;
+        color: #b0a6b0;
+        span {
+          font-size: 12px;
+          padding-right: 10px;
+        }
+        em {
+          font-size: 12px;
+          padding-right: 10px;
+          color: #ffa500;
+          img {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+          }
+        }
+        i {
+          color: #ffa500;
+        }
+      }
+    }
+  }
+
+  .content-nullList {
+    margin-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px #ddd solid;
+    .image {
+      width: 220px;
+      img {
+        width: 100%;
+      }
+    }
+    .centerList {
+      width: 460px;
+      margin-left: 20px;
+      span {
+        display: block;
+        margin-bottom: 15px;
+        font-size: 18px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
+      }
+      p {
+        color: #666666;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+      }
+      .userInfo {
+        margin-top: 20px;
+        color: #b0a6b0;
+        span {
+          font-size: 12px;
+          padding-right: 10px;
+        }
+        em {
+          font-size: 12px;
+          padding-right: 10px;
+          color: #ffa500;
+          img {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+          }
+        }
+        i {
+          color: #ffa500;
+        }
       }
     }
   }
